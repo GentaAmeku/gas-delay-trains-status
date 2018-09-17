@@ -1,0 +1,13 @@
+{
+  "name": "gas-delay-train-status",
+  "author:": "genta-ameku",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@google/clasp": "^1.5.3",
+    "@types/google-apps-script": "^0.0.27",
+    "tslint": "^5.11.0",
+    "tslint-config-airbnb": "^5.11.0"
+  }
+}

@@ -1,51 +1,50 @@
-declare var UrlFetchApp: any;
-
-const mapToRow = (names: Object[][], trains: Object[][]) => {
-  if (names.length !== trains.length) {
+const trainStrToObject = (trainNames: string): Train[] => {
+  if (typeof trainNames !== 'string') {
     return [];
   }
-  const results = [];
-  names.forEach((name, index) => {
-    results.push({ name: name[0], trains: trains[index][0] });
+  const trainsArray: string[] = trainNames.split(',');
+  return trainsArray.map((trainInfo) => {
+    const name = trainInfo.slice(0, trainInfo.indexOf('/'));
+    const company = trainInfo.slice(trainInfo.indexOf('/') + 1);
+    return { name, company };
   });
-  return results;
 };
 
-const fetchDelayTrains = () => {
-  const TETSUDO_ENDPOINT =
-    'https://rti-giken.jp/fhc/api/train_tetsudo/delay.json';
-  return UrlFetchApp.fetch(TETSUDO_ENDPOINT);
-};
+const mapToRow = (
+  nameColumn: string[][],
+  trainColumn: string[][],
+): User[] | [] =>
+  nameColumn.map((name, index) => {
+    const targetTrains = trainColumn[index] ? trainColumn[index][0] : null;
+    return { name: name[0], trains: trainStrToObject(targetTrains) };
+  });
 
-const filterDelayTrains = () => {
-
-};
+// const pickTrains = (delayTrains: DelayTrain[] = [], user: User) => {
+//   user.trains.forEach(train => {
+//     const hoge = delayTrains.find(delayTrain => {
+//       return (delayTrain.name === targetTrainName && delayTrain.company === targetTrainCompany);
+//     })
+//   });
+// };
 
 const fetchSpreadSheet = () => {
   const SPREADSHEETID = '1JiaOSinQSYaQLJkNsFuMHP98xMbMPdMG15eU-S4ynpU';
   const SHEETNAME = 'register';
-  const spreadSheet = SpreadsheetApp.openById(SPREADSHEETID);
-  const sheat = spreadSheet.getSheetByName(SHEETNAME);
-  const names = sheat.getRange(2, 1, sheat.getLastRow() - 1).getValues();
-  const trains = sheat.getRange(2, 2, sheat.getLastRow() - 1).getValues();
-  return mapToRow(names, trains);
+  return SpreadsheetApp.openById(SPREADSHEETID).getSheetByName(SHEETNAME);
 };
 
-const postDiscord = () => {
-  const id = '491272344053219328';
-  const token =
-    'z3hulGFH85yffFlmsjYR0fXUrWZ1LA9qzgN2FZHG007rhaQbqQ5oinFSZ85uHHivpYPt';
-  const url = `https://discordapp.com/api/webhooks/${id}/${token}`;
-  const channel = '#general';
-  const content = '';
-  const username = '';
-  const method = 'post';
-  const payload = { token, channel, content, username, parse: 'full' };
-  const params = { payload, method: 'post', muteHttpExceptions: true };
-
-  const res = UrlFetchApp.fetch(url, params);
+const parseSpreadSheetToArray = (spreadsheet): User[] => {
+  const nameColumn = spreadsheet
+    .getRange(2, 1, spreadsheet.getLastRow() - 1)
+    .getValues();
+  const trainColumn = spreadsheet
+    .getRange(2, 2, spreadsheet.getLastRow() - 1)
+    .getValues();
+  return mapToRow(nameColumn, trainColumn);
 };
 
 function startSearchDelayTrains() {
-  fetchDelayTrains();
+  const delayTrains = fetchDelayTrains();
+  const spreadSheet = fetchSpreadSheet();
+  const users = parseSpreadSheetToArray(spreadSheet);
 }

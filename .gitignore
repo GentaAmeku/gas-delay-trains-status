@@ -1,1 +1,4 @@
 /node_modules
+/src/config/discord.config.ts
+
+.DS_Store

@@ -6,8 +6,7 @@ export interface DelayTrain {
 }
 
 const fetchDelayTrains = (): DelayTrain[] => {
-  const TETSUDO_ENDPOINT =
-    'https://rti-giken.jp/fhc/api/train_tetsudo/delay.json';
+  const TETSUDO_ENDPOINT = 'https://rti-giken.jp/fhc/api/train_tetsudo/delay.json';
   return JSON.parse(UrlFetchApp.fetch(TETSUDO_ENDPOINT).getContentText());
 };
 
@@ -23,26 +22,25 @@ const trainStrToObject = (trainNames: string): Train[] => {
   });
 };
 
-const mapToRow = (
-  nameColumn: string[][],
-  trainColumn: string[][],
-): User[] | [] =>
+const mapToRow = (nameColumn: string[][], trainColumn: string[][]): User[] | [] =>
   nameColumn.map((name, index) => {
     const targetTrains = trainColumn[index] ? trainColumn[index][0] : null;
     return { name: name[0], trains: trainStrToObject(targetTrains) };
   });
 
-const pickDelayTrains = (
-  delayTrains: Train[] = [],
-  { trains }: User,
-): Train[] | [] => {
-  const results = [];
-  trains.forEach(train => {
-    const foundTrains = delayTrains.find(
-      delayTrain =>
-        delayTrain.name === train.name && delayTrain.company === train.company,
-    );
-    results.push(foundTrains);
-  });
+const foundTrains = (train, delayTrains) => {
+  const trains = [];
+  for (const delayTrain of delayTrains) {
+    if (delayTrain.name === train.name && delayTrain.company === train.company) {
+      trains.push(delayTrain);
+    }
+  }
+  return trains;
+};
+
+const pickDelayTrains = (delayTrains: Train[], { trains }: User): Train[] | [] => {
+  let results = [];
+  // array.find not working
+  trains.forEach(train => results = foundTrains(train, delayTrains));
   return results;
 };

@@ -10,9 +10,6 @@ function startPostDiscord() {
   const users = createUsersFromSpreadSheet(spreadSheet);
   for (const user of users) {
     const targetDelayTrains = pickDelayTrains(delayTrains, user);
-    postDiscord(
-      createContent(targetDelayTrains),
-      user
-    );
+    postDiscord(createContent(targetDelayTrains), user);
   }
 }

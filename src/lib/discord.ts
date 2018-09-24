@@ -38,5 +38,6 @@ const postDiscord = (content: string, { name }: User): void => {
     parse: 'full',
   };
   const params = { payload, method: 'post', muteHttpExceptions: true };
+  Logger.log(params);
   UrlFetchApp.fetch(endpoint, params);
 };

@@ -10,6 +10,8 @@ function startPostDiscord() {
   const users = createUsersFromSpreadSheet(spreadSheet);
   for (const user of users) {
     const targetDelayTrains = pickDelayTrains(delayTrains, user);
-    postDiscord(createContent(targetDelayTrains), user);
+    const content = createContent(targetDelayTrains), user);
+    const message = content ? content : '本日の遅延情報はありません。';
+    postDiscord(message, user);
   }
 }

@@ -1,16 +1,15 @@
-const addLabelToMessageIfNeeded = message => message ? message : message += '遅延情報';
-
 const messageCreator = (message: string = '', delayTrain: Train) => {
-  const date = new Date(Number(delayTrain.lastupdate_gmt) * 1000);
-  message = addLabelToMessageIfNeeded(message);
+  // const date = new Date(Number(delayTrain.lastupdate_gmt) * 1000);
   message += `\n${delayTrain.name}(${delayTrain.company})`;
   return message;
 };
 
-const createContent = (delayTrains: Trains[]): string => {
-  let content = '';
-  if (delayTrains.length > 0) {
+const createContent = (delayTrains: Trains[], { name }: User): string => {
+  let content = name;
+  if (delayTrains && delayTrains.length > 0) {
     _.each(delayTrains, delayTrain => content = messageCreator(content, delayTrain));
+  } else {
+    content += ': 本日の遅延情報はありません。';
   }
   return content;
 };
@@ -30,6 +29,6 @@ const postDiscord = (content: string, { name }: User): void => {
     avatar_url: avatarUrl,
     parse: 'full',
   };
-  Logger.log(params);
+  Logger.log(payload);
   UrlFetchApp.fetch(endpoint, { payload, method: 'post', muteHttpExceptions: true });
 };

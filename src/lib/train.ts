@@ -6,7 +6,7 @@ const trainStrToObject = (trainNames: string): Train[] => {
     return [];
   }
   const trainsArray: string[] = trainNames.split(',');
-  _.map(trainsArray, trainInfo => {
+  return _.map(trainsArray, trainInfo => {
     const name = trainInfo.slice(0, trainInfo.indexOf('/'));
     const company = trainInfo.slice(trainInfo.indexOf('/') + 1);
     return { name, company };
@@ -20,6 +20,6 @@ const mapToRow = (nameColumn: string[][], trainColumn: string[][]): User[] | [] 
   });
 
 const pickDelayTrains = (delayTrains: Train[], { trains }: User): Train[] | [] =>
-  _.map(delayTrains, delayTrain =>
-    _.find(trains, train => delayTrain.name === train.name && delayTrain.company === train.company),
+  _.find(delayTrains, delayTrain =>
+    _.some(trains, train => delayTrain.name === train.name && delayTrain.company === train.company),
   );

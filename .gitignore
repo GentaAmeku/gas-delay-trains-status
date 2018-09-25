@@ -1,4 +1,5 @@
 /node_modules
 /src/config/discord.config.ts
+/src/config/spread-sheet.config.ts
 
 .DS_Store

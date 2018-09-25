@@ -1,12 +1,8 @@
-const SPREADSHEETID = '1JiaOSinQSYaQLJkNsFuMHP98xMbMPdMG15eU-S4ynpU';
-const SHEETNAME = 'register';
+const _ = Underscore.load();
 
 function startPostDiscord() {
   const delayTrains = fetchDelayTrains();
-  const spreadSheet = fetchSpreadSheet({
-    id: SPREADSHEETID,
-    sheetName: SHEETNAME,
-  });
+  const spreadSheet = fetchSpreadSheet(spreadSheetConfig);
   const users = createUsersFromSpreadSheet(spreadSheet);
   for (const user of users) {
     const targetDelayTrains = pickDelayTrains(delayTrains, user);

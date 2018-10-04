@@ -20,6 +20,6 @@ const mapToRow = (nameColumn: string[][], trainColumn: string[][]): User[] | [] 
   });
 
 const pickDelayTrains = (delayTrains: Train[], { trains }: User): Train[] | [] =>
-  _.find(delayTrains, delayTrain =>
-    _.some(trains, train => delayTrain.name === train.name && delayTrain.company === train.company),
+  _.filter(trains, train =>
+    _.some(delayTrains, delayTrain => (delayTrain.name === train.name && delayTrain.company === train.company)),
   );

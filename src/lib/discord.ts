@@ -1,16 +1,14 @@
-const messageCreator = (message: string = '', delayTrain: Train) => {
+const makeContent = (content: string = '', delayTrain: Train) => {
   // const date = new Date(Number(delayTrain.lastupdate_gmt) * 1000);
-  message += `\n${delayTrain.name}(${delayTrain.company})`;
-  return message;
+  return content += `\n* ${delayTrain.name}(${delayTrain.company})`;
 };
 
 const createContent = (delayTrains: Trains[], { name }: User): string => {
-  let content = name;
-  if (delayTrains && delayTrains.length > 0) {
-    _.each(delayTrains, delayTrain => content = messageCreator(content, delayTrain));
-  } else {
-    content += ': 本日の遅延情報はありません。';
+  if (!delayTrains && delayTrains.length === 0) {
+    return '本日の遅延情報はありません。';
   }
+  let content = `**${name}**`;
+  _.each(delayTrains, delayTrain => content = makeContent(content, delayTrain));
   return content;
 };
 

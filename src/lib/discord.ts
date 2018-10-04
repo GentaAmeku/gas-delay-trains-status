@@ -4,8 +4,8 @@ const makeContent = (content: string = '', delayTrain: Train) => {
 };
 
 const createContent = (delayTrains: Trains[], { name }: User): string => {
-  if (!delayTrains && delayTrains.length === 0) {
-    return '本日の遅延情報はありません。';
+  if (!delayTrains || delayTrains.length === 0) {
+    return `**${name}**: 本日の遅延情報はありません。`;
   }
   let content = `**${name}**`;
   _.each(delayTrains, delayTrain => content = makeContent(content, delayTrain));
